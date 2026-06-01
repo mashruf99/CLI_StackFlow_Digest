@@ -1,0 +1,751 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+  <title>CLI StackFlow Digest</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: #ffffff;
+      color: #232629;
+      font-family: 'Times New Roman', Times, serif;
+      font-size: 16px;
+      line-height: 1.7;
+      min-width: 900px;
+    }
+
+    .page-wrap {
+      width: 900px;
+      margin: 0 auto;
+    }
+
+    ::-webkit-scrollbar { width: 4px; }
+    ::-webkit-scrollbar-track { background: #fff; }
+    ::-webkit-scrollbar-thumb { background: #F48024; }
+
+    /* NAV */
+    nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: #232629;
+      border-bottom: 3px solid #F48024;
+      height: 52px;
+    }
+
+    .nav-inner {
+      width: 900px;
+      margin: 0 auto;
+      height: 52px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 2.5rem;
+    }
+
+    .nav-logo {
+      font-family: Arial, sans-serif;
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: #ffffff;
+    }
+
+    .nav-logo span { color: #F48024; }
+
+    .nav-links {
+      display: flex;
+      gap: 2rem;
+      list-style: none;
+    }
+
+    .nav-links a {
+      font-family: Arial, sans-serif;
+      color: #BCBBBB;
+      text-decoration: none;
+      font-size: 12px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      transition: color 0.15s;
+    }
+
+    .nav-links a:hover { color: #F48024; }
+
+    .nav-badge {
+      font-family: Arial, sans-serif;
+      font-size: 11px;
+      color: #F48024;
+      border: 1px solid #F48024;
+      padding: 2px 8px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    /* HERO */
+    .hero {
+      padding: 80px 2.5rem 65px;
+      border-bottom: 1px solid #e3e6e8;
+      background: #ffffff;
+    }
+
+    .hero-tag {
+      font-family: Arial, sans-serif;
+      font-size: 11px;
+      color: #F48024;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      margin-bottom: 2rem;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .hero-tag::before {
+      content: '';
+      display: inline-block;
+      width: 28px;
+      height: 2px;
+      background: #F48024;
+    }
+
+    h1 {
+      font-family: 'Times New Roman', Times, serif;
+      font-size: 3.4rem;
+      font-weight: 700;
+      line-height: 1.12;
+      margin-bottom: 1.4rem;
+      color: #232629;
+      letter-spacing: -0.01em;
+    }
+
+    h1 .so-orange { color: #F48024; }
+
+    .hero-desc {
+      font-size: 16px;
+      color: #6a737c;
+      max-width: 560px;
+      margin-bottom: 2.5rem;
+      line-height: 1.85;
+      font-family: Arial, sans-serif;
+    }
+
+    .hero-ctas { display: flex; gap: 1rem; }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 22px;
+      font-family: Arial, sans-serif;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.15s;
+      text-decoration: none;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .btn-primary {
+      background: #F48024;
+      color: #fff;
+      border: 1px solid #F48024;
+    }
+
+    .btn-primary:hover { background: #da6f1e; border-color: #da6f1e; }
+
+    .btn-ghost {
+      background: transparent;
+      color: #232629;
+      border: 1px solid #232629;
+    }
+
+    .btn-ghost:hover { background: #232629; color: #fff; }
+
+    /* TERMINAL */
+    .terminal-wrap {
+      padding: 55px 2.5rem;
+      border-bottom: 1px solid #e3e6e8;
+      background: #f8f9f9;
+    }
+
+    .terminal {
+      background: #232629;
+      overflow: hidden;
+      border-top: 3px solid #F48024;
+    }
+
+    .terminal-bar {
+      background: #2d3033;
+      padding: 10px 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      border-bottom: 1px solid #3d4044;
+    }
+
+    .tbar-dot { width: 10px; height: 10px; border-radius: 50%; background: #4d5054; }
+
+    .tbar-title {
+      flex: 1;
+      text-align: center;
+      font-family: Arial, sans-serif;
+      font-size: 11px;
+      color: #6a737c;
+      letter-spacing: 0.08em;
+    }
+
+    .terminal-body {
+      padding: 1.8rem 2rem;
+      font-family: Arial, sans-serif;
+      font-size: 13px;
+      line-height: 2;
+      color: #BCBBBB;
+    }
+
+    .t-line { display: flex; gap: 8px; }
+    .t-prompt { color: #F48024; flex-shrink: 0; }
+    .t-cmd { color: #fff; }
+    .t-out { color: #6a737c; padding-left: 16px; }
+    .t-out.hi { color: #BCBBBB; }
+    .t-out.orange { color: #F48024; }
+    .t-table { padding-left: 16px; color: #4d5054; font-size: 12px; }
+
+    .cursor {
+      display: inline-block;
+      width: 8px; height: 13px;
+      background: #F48024;
+      vertical-align: middle;
+      animation: blink 1s step-end infinite;
+      margin-left: 2px;
+    }
+
+    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
+
+    /* STATS */
+    .stats-strip {
+      border-bottom: 1px solid #e3e6e8;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      background: #232629;
+    }
+
+    .stat-cell {
+      padding: 2.2rem;
+      text-align: center;
+      border-right: 1px solid #3d4044;
+    }
+
+    .stat-cell:last-child { border-right: none; }
+
+    .stat-num {
+      display: block;
+      font-family: 'Times New Roman', Times, serif;
+      font-size: 2.4rem;
+      font-weight: 700;
+      color: #F48024;
+    }
+
+    .stat-label {
+      font-family: Arial, sans-serif;
+      font-size: 11px;
+      color: #BCBBBB;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-top: 4px;
+    }
+
+    /* SECTIONS */
+    section {
+      padding: 65px 2.5rem;
+      border-bottom: 1px solid #e3e6e8;
+    }
+
+    .section-label {
+      font-family: Arial, sans-serif;
+      font-size: 11px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: #F48024;
+      margin-bottom: 0.5rem;
+    }
+
+    h2 {
+      font-family: 'Times New Roman', Times, serif;
+      font-size: 2rem;
+      font-weight: 700;
+      color: #232629;
+      margin-bottom: 0.5rem;
+    }
+
+    .section-sub {
+      color: #6a737c;
+      font-size: 14px;
+      font-family: Arial, sans-serif;
+      margin-bottom: 2.5rem;
+    }
+
+    /* FEATURES */
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      border: 1px solid #e3e6e8;
+    }
+
+    .feature-card {
+      padding: 1.8rem;
+      border-right: 1px solid #e3e6e8;
+      border-bottom: 1px solid #e3e6e8;
+      transition: background 0.15s;
+      position: relative;
+    }
+
+    .feature-card::after {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      height: 2px;
+      background: #F48024;
+      transform: scaleX(0);
+      transition: transform 0.2s;
+      transform-origin: left;
+    }
+
+    .feature-card:hover { background: #fdf3e8; }
+    .feature-card:hover::after { transform: scaleX(1); }
+
+    .feat-marker {
+      width: 24px;
+      height: 2px;
+      background: #F48024;
+      margin-bottom: 1.2rem;
+    }
+
+    .feat-title {
+      font-family: 'Times New Roman', Times, serif;
+      font-size: 15px;
+      font-weight: 700;
+      color: #232629;
+      margin-bottom: 0.5rem;
+    }
+
+    .feat-desc {
+      font-size: 13px;
+      color: #6a737c;
+      line-height: 1.7;
+      font-family: Arial, sans-serif;
+    }
+
+    .feat-tag {
+      display: inline-block;
+      margin-top: 1rem;
+      font-family: Arial, sans-serif;
+      font-size: 10px;
+      color: #F48024;
+      border: 1px solid #F48024;
+      padding: 2px 8px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      background: #fff8f2;
+    }
+
+    /* STACK */
+    .stack-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      border: 1px solid #e3e6e8;
+    }
+
+    .stack-item {
+      padding: 1.4rem 1.6rem;
+      border-right: 1px solid #e3e6e8;
+      border-bottom: 1px solid #e3e6e8;
+      transition: background 0.15s;
+    }
+
+    .stack-item:hover { background: #fdf3e8; }
+
+    .stack-name {
+      font-family: Arial, sans-serif;
+      font-size: 13px;
+      font-weight: 700;
+      color: #232629;
+    }
+
+    .stack-desc {
+      font-family: Arial, sans-serif;
+      font-size: 11px;
+      color: #F48024;
+      margin-top: 3px;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+
+    /* STEPS */
+    .steps { display: flex; flex-direction: column; }
+
+    .step {
+      display: flex;
+      gap: 2rem;
+      padding: 1.5rem 0;
+      border-bottom: 1px solid #e3e6e8;
+    }
+
+    .step:last-child { border-bottom: none; }
+
+    .step-num {
+      font-family: Arial, sans-serif;
+      font-size: 11px;
+      font-weight: 700;
+      color: #F48024;
+      letter-spacing: 0.1em;
+      width: 28px;
+      flex-shrink: 0;
+      padding-top: 4px;
+    }
+
+    .step-content { flex: 1; }
+
+    .step-title {
+      font-family: 'Times New Roman', Times, serif;
+      font-size: 16px;
+      font-weight: 700;
+      color: #232629;
+      margin-bottom: 8px;
+    }
+
+    .code-block {
+      width: 620px;
+      background: #f8f9f9;
+      border: 1px solid #e3e6e8;
+      border-left: 3px solid #F48024;
+      padding: 12px 16px;
+      font-family: Arial, sans-serif;
+      font-size: 12px;
+      color: #232629;
+      position: relative;
+      line-height: 1.8;
+    }
+
+    .code-block .comment { color: #BCBBBB; }
+
+    .copy-btn {
+      position: absolute;
+      right: 8px;
+      top: 8px;
+      background: #fff;
+      border: 1px solid #e3e6e8;
+      color: #6a737c;
+      font-family: Arial, sans-serif;
+      font-size: 10px;
+      padding: 3px 8px;
+      cursor: pointer;
+      transition: all 0.15s;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+
+    .copy-btn:hover { border-color: #F48024; color: #F48024; }
+
+    /* FOOTER */
+    footer {
+      background: #232629;
+      padding: 2.5rem;
+      text-align: center;
+      font-family: Arial, sans-serif;
+      font-size: 12px;
+      color: #BCBBBB;
+      letter-spacing: 0.05em;
+      border-top: 3px solid #F48024;
+    }
+
+    footer a { color: #F48024; text-decoration: none; }
+    footer a:hover { text-decoration: underline; }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-inner">
+    <div class="nav-logo">CLI <span>Stack</span>Flow Digest</div>
+    <ul class="nav-links">
+      <li><a href="#features" onclick="smoothScroll(event,'features')">Features</a></li>
+      <li><a href="#stack" onclick="smoothScroll(event,'stack')">Stack</a></li>
+      <li><a href="#install" onclick="smoothScroll(event,'install')">Install</a></li>
+      <li><a href="https://github.com/mashruf99/CLI_StackFlow_Digest" target="_blank">GitHub</a></li>
+    </ul>
+    <span class="nav-badge">v1.0.0</span>
+  </div>
+</nav>
+
+<div class="page-wrap">
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="hero-tag">Open Source &mdash; Python &mdash; CLI Tool</div>
+    <h1>Stack Overflow.<br><span class="so-orange">Terminal-first.</span><br>Zero friction.</h1>
+    <p class="hero-desc">
+      Search Stack Overflow questions and answers directly from your terminal.
+      Get top-voted answers, readability analysis, and a QR code to the thread &mdash;
+      all without opening a browser.
+    </p>
+    <div class="hero-ctas">
+      <a href="#install" onclick="smoothScroll(event,'install')" class="btn btn-primary">Get Started</a>
+      <a href="https://github.com/mashruf99/CLI_StackFlow_Digest" target="_blank" class="btn btn-ghost">View on GitHub</a>
+    </div>
+  </div>
+
+  <!-- TERMINAL DEMO -->
+  <div class="terminal-wrap">
+    <div class="terminal">
+      <div class="terminal-bar">
+        <div class="tbar-dot"></div>
+        <div class="tbar-dot"></div>
+        <div class="tbar-dot"></div>
+        <div class="tbar-title">bash &mdash; cli-stackflow-digest</div>
+      </div>
+      <div class="terminal-body">
+        <div class="t-line"><span class="t-prompt">~/projects $</span><span class="t-cmd">&nbsp;python news_digest.py</span></div>
+        <br>
+        <div class="t-out">========================================================</div>
+        <div class="t-out hi">&nbsp;&nbsp;CLI StackFlow Digest v1.0</div>
+        <div class="t-out">========================================================</div>
+        <br>
+        <div class="t-out orange">Search Stack Overflow: <span style="color:#fff">caching</span></div>
+        <br>
+        <div class="t-out hi">Results (page 1):</div>
+        <br>
+        <div class="t-out">[1] What is the difference between cache and buffer?</div>
+        <div class="t-out">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Answered | Votes: 892 | Answers: 12</div>
+        <br>
+        <div class="t-out">[2] How does HTTP caching work in browsers?</div>
+        <div class="t-out">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Answered | Votes: 445 | Answers: 8</div>
+        <br>
+        <div class="t-out">[3] Python dict caching vs functools.lru_cache</div>
+        <div class="t-out">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Answered | Votes: 231 | Answers: 5</div>
+        <br>
+        <div class="t-out orange">Pick a number: <span style="color:#fff">2</span></div>
+        <br>
+        <div class="t-out hi">TOP ANSWERS</div>
+        <div class="t-table">+===========+================================================+</div>
+        <div class="t-table">| Votes     | 445  [Accepted]                                |</div>
+        <div class="t-table">| By        | Jon Skeet                                      |</div>
+        <div class="t-table">| Flesch    | 61.2 (Medium)                                  |</div>
+        <div class="t-table">+===========+================================================+</div>
+        <br>
+        <div class="t-out hi">QR Code saved: How_does_HTTP_caching_qr.png</div>
+        <div class="t-line"><span class="t-prompt">~/projects $</span><span class="cursor"></span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- STATS -->
+  <div class="stats-strip">
+    <div class="stat-cell">
+      <span class="stat-num">5</span>
+      <div class="stat-label">Core Libraries</div>
+    </div>
+    <div class="stat-cell">
+      <span class="stat-num">&lt;50</span>
+      <div class="stat-label">Lines of Setup</div>
+    </div>
+    <div class="stat-cell">
+      <span class="stat-num">10k</span>
+      <div class="stat-label">Daily API Requests</div>
+    </div>
+    <div class="stat-cell">
+      <span class="stat-num">~2s</span>
+      <div class="stat-label">Avg Response</div>
+    </div>
+  </div>
+
+  <!-- FEATURES -->
+  <section id="features">
+    <div class="section-label">What it does</div>
+    <h2>Core Features</h2>
+    <p class="section-sub">Everything in the terminal. No browser, no distractions.</p>
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feat-marker"></div>
+        <div class="feat-title">Stack Overflow Search</div>
+        <div class="feat-desc">Searches Stack Overflow using the official API and returns the top 8 most relevant questions, sorted by vote count and relevance.</div>
+        <span class="feat-tag">requests</span>
+      </div>
+      <div class="feature-card">
+        <div class="feat-marker"></div>
+        <div class="feat-title">Top Answers Display</div>
+        <div class="feat-desc">Fetches the top 3 answers for any selected question, ordered by votes. Shows accepted status, author name, and a 400-character preview of the answer body.</div>
+        <span class="feat-tag">stackexchange api</span>
+      </div>
+      <div class="feature-card">
+        <div class="feat-marker"></div>
+        <div class="feat-title">QR Code Generator</div>
+        <div class="feat-desc">Generates a PNG QR code from the Stack Overflow thread URL and saves it locally. Scan it on mobile to open the full thread instantly.</div>
+        <span class="feat-tag">qrcode</span>
+      </div>
+      <div class="feature-card">
+        <div class="feat-marker"></div>
+        <div class="feat-title">Readability Analysis</div>
+        <div class="feat-desc">Runs Flesch Reading Ease and Kincaid Grade Level analysis on the top answer. Shows word count, sentence count, and an Easy / Medium / Hard difficulty rating.</div>
+        <span class="feat-tag">textstat</span>
+      </div>
+      <div class="feature-card">
+        <div class="feat-marker"></div>
+        <div class="feat-title">Paginated Results</div>
+        <div class="feat-desc">Didn't find what you needed on the first page? Press [n] to load the next page of results, or [s] to start a completely new search without restarting the tool.</div>
+        <span class="feat-tag">pagination</span>
+      </div>
+      <div class="feature-card">
+        <div class="feat-marker"></div>
+        <div class="feat-title">.env Configuration</div>
+        <div class="feat-desc">Stores the Stack Exchange API key securely in a .env file using python-dotenv. Runs without a key too, falling back to 300 free daily requests automatically.</div>
+        <span class="feat-tag">python-dotenv</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- TECH STACK -->
+  <section id="stack">
+    <div class="section-label">Built with</div>
+    <h2>Tech Stack</h2>
+    <p class="section-sub">Fully open-source and completely free.</p>
+    <div class="stack-grid">
+      <div class="stack-item">
+        <div class="stack-name">Python 3.8+</div>
+        <div class="stack-desc">Core language</div>
+      </div>
+      <div class="stack-item">
+        <div class="stack-name">requests</div>
+        <div class="stack-desc">API calls</div>
+      </div>
+      <div class="stack-item">
+        <div class="stack-name">tabulate</div>
+        <div class="stack-desc">Table formatting</div>
+      </div>
+      <div class="stack-item">
+        <div class="stack-name">qrcode[pil]</div>
+        <div class="stack-desc">QR generation</div>
+      </div>
+      <div class="stack-item">
+        <div class="stack-name">textstat</div>
+        <div class="stack-desc">Readability analysis</div>
+      </div>
+      <div class="stack-item">
+        <div class="stack-name">python-dotenv</div>
+        <div class="stack-desc">Env management</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- INSTALL -->
+  <section id="install">
+    <div class="section-label">Quick Start</div>
+    <h2>Installation</h2>
+    <p class="section-sub">6 steps, ready in 5 minutes.</p>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">01</div>
+        <div class="step-content">
+          <div class="step-title">Clone the Repository</div>
+          <div class="code-block">
+            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+            git clone https://github.com/mashruf99/CLI_StackFlow_Digest.git<br>
+            cd CLI_StackFlow_Digest
+          </div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">02</div>
+        <div class="step-content">
+          <div class="step-title">Create Virtual Environment</div>
+          <div class="code-block">
+            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+            python -m venv venv<br>
+            <span class="comment"># Windows:</span> venv\Scripts\activate<br>
+            <span class="comment"># Mac/Linux:</span> source venv/bin/activate
+          </div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">03</div>
+        <div class="step-content">
+          <div class="step-title">Install Dependencies</div>
+          <div class="code-block">
+            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+            pip install -r requirements.txt
+          </div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">04</div>
+        <div class="step-content">
+          <div class="step-title">Add API Key to .env</div>
+          <div class="code-block">
+            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+            <span class="comment"># .env</span><br>
+            APP_NAME=CLI StackFlow Digest<br>
+            VERSION=1.0.0<br>
+            STACKOVERFLOW_KEY=your_key_here
+          </div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">05</div>
+        <div class="step-content">
+          <div class="step-title">Run the Application</div>
+          <div class="code-block">
+            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+            python news_digest.py
+          </div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">06</div>
+        <div class="step-content">
+          <div class="step-title">Search Any Topic</div>
+          <div class="code-block">
+            Search Stack Overflow: caching
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <p>Open Source &mdash; MIT License</p>
+    <p style="margin-top:8px">
+      <a href="https://github.com/mashruf99" target="_blank">GitHub</a> &nbsp;&middot;&nbsp;
+      <a href="#install" onclick="smoothScroll(event,'install')">Docs</a> &nbsp;&middot;&nbsp;
+      <a href="mailto:bemashrufislam@gmail.com">Contact</a>
+    </p>
+  </footer>
+
+</div>
+
+<script>
+  function smoothScroll(e, id) {
+    e.preventDefault();
+    const target = document.getElementById(id);
+    if (!target) return;
+    const navHeight = document.querySelector('nav').offsetHeight;
+    const top = target.getBoundingClientRect().top + window.scrollY - navHeight - 16;
+    window.scrollTo({ top, behavior: 'smooth' });
+  }
+
+  function copyCode(btn) {
+    const block = btn.parentElement;
+    const text = block.innerText.replace('Copy\n', '').trim();
+    navigator.clipboard.writeText(text).then(() => {
+      btn.textContent = 'Copied';
+      setTimeout(() => { btn.textContent = 'Copy'; }, 1800);
+    });
+  }
+</script>
+</body>
+</html>
